@@ -3,7 +3,7 @@ import torchvision
 import torchvision.transforms as transforms
 from torch.autograd import Variable
 # from multiprocessing import set_start_method
-
+from network import Net, Vgg16_net, AlexNet
 
 batch_size = 16
 class_num = 10
@@ -23,9 +23,11 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
                                          shuffle=False)
 
 
-
+# net = Vgg16_net().to(device)
+# state_dict = torch.load('model_state_dict.pth')
+# net.load_state_dict(state_dict)
 net = torch.load('model.pt')
-
+# torch.save(net.state_dict(), 'model_state_dict.pth')
 correct = 0
 total = 0
 for data in testloader:  # 循环每一个batch

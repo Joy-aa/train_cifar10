@@ -30,8 +30,8 @@ classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-net = Net().to(device)
-# net = AlexNet().to(device)
+# net = Net().to(device)
+net = AlexNet().to(device)
 # net = Vgg16_net().to(device)
 criterion = nn.CrossEntropyLoss()  # 交叉熵损失函数
 # optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
@@ -54,7 +54,7 @@ for epoch in range(epoches):
     for i, data in enumerate(trainloader, 0):
         inputs, labels = data
 
-        inputs, labels = Variable(inputs), Variable(labels)
+        inputs, labels = Variable(inputs).to(device), Variable(labels).to(device)
         optimizer.zero_grad()
 
         outputs = net(inputs)
@@ -92,13 +92,17 @@ plt.plot(x2, y2, '.-')
 plt.xlabel('Test loss vs. epoches')
 plt.ylabel('Test loss')
 plt.show()
-# torch.save(net, 'model.pt')
+torch.save(net, 'model.pt')
+
+# net = torch.load('model.pt')
 
 correct = 0
 total = 0
 for data in testloader:  # 循环每一个batch
     images, labels = data
-    outputs = net(Variable(images))  # 输入网络进行测试
+    images = Variable(images).to(device)
+    labels = Variable(labels).to(device)
+    outputs = net(images)  # 输入网络进行测试
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)  # 更新测试图片的数量
     correct += (predicted == labels).sum()  # 更新正确分类的图片的数量
@@ -111,7 +115,9 @@ class_correct = list(0. for i in range(class_num))  # 定义一个存储每类�
 class_total = list(0. for i in range(class_num))  # 定义一个存储每类中测试总数的个数的 列表，初始化为0
 for data in testloader:  # 以一个batch为单位进行循环
     images, labels = data
-    outputs = net(Variable(images))
+    images = Variable(images).to(device)
+    labels = Variable(labels).to(device)
+    outputs = net(images)  # 输入网络进行测试
     _, predicted = torch.max(outputs.data, 1)
     c = (predicted == labels).squeeze()
     for i in range(batch_size):
