@@ -44,9 +44,6 @@ optimizer = optim.Adam(net.parameters(),
 #定义两个数组
 Loss_list = []
 Accuracy_list = []
-net = Net()
-criterion = nn.CrossEntropyLoss()  # 交叉熵损失函数
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 print('Start Training')
 
